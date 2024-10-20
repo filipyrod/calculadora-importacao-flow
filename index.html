@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Importação</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .alert { display: none; }
+        #output {
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Calculadora de Importação</h1>
+        <form id="importForm">
+            <div class="mb-3">
+                <label for="nomeCliente" class="form-label">Nome do cliente:</label>
+                <input type="text" class="form-control" id="nomeCliente" required>
+            </div>
+            <div class="mb-3">
+                <label for="passaporteCliente" class="form-label">Passaporte do cliente:</label>
+                <input type="text" class="form-control" id="passaporteCliente" required>
+            </div>
+            <div class="mb-3">
+                <label for="nomeImportador" class="form-label">Nome do importador:</label>
+                <input type="text" class="form-control" id="nomeImportador" required>
+            </div>
+            <div class="mb-3">
+                <label for="passaporteImportador" class="form-label">Passaporte do importador:</label>
+                <input type="text" class="form-control" id="passaporteImportador" required>
+            </div>
+            <div class="mb-3">
+                <label for="produtoImportado" class="form-label">Produto importado:</label>
+                <input type="text" class="form-control" id="produtoImportado" required>
+            </div>
+            <div class="mb-3">
+                <label for="valorProduto" class="form-label">Valor total do produto:</label>
+                <input type="number" class="form-control" id="valorProduto" required>
+            </div>
+            <div class="mb-3">
+                <label for="valorProdutoEmReais" class="form-label">Valor do produto em Reais:</label>
+                <input type="number" class="form-control" id="valorProdutoEmReais" required>
+            </div>
+            <div class="mb-3">
+                <label for="nomeAdvogado" class="form-label">Representante Judicial:</label>
+                <input type="text" class="form-control" id="nomeAdvogado" required>
+            </div>
+            <div class="mb-3">
+                <label for="oaf" class="form-label">OAF:</label>
+                <input type="text" class="form-control" id="oaf" required>
+            </div>
+            <button type="button" class="btn btn-success" id="generateSummary">Gerar Resumo</button>
+            <div class="alert alert-success" id="copiado" role="alert">
+                Copiado com sucesso!
+            </div>
+        </form>
+
+        <div id="output" class="mt-4"></div>
+    </div>
+
+    <script>
+        document.getElementById('generateSummary').addEventListener('click', function () {
+            const nomeCliente = document.getElementById('nomeCliente').value;
+            const passaporteCliente = document.getElementById('passaporteCliente').value;
+            const nomeImportador = document.getElementById('nomeImportador').value;
+            const passaporteImportador = document.getElementById('passaporteImportador').value;
+            const produtoImportado = document.getElementById('produtoImportado').value;
+            const valorProduto = parseFloat(document.getElementById('valorProduto').value);
+            const valorProdutoEmReais = parseFloat(document.getElementById('valorProdutoEmReais').value);
+            const nomeAdvogado = document.getElementById('nomeAdvogado').value;
+            const oaf = document.getElementById('oaf').value;
+
+            if (isNaN(valorProduto)) {
+                alert('Por favor, insira um valor válido para o produto.');
+                return;
+            }
+
+            const valorImportador = valorProduto * 0.80;
+            const valorPrefeitura = valorProduto * 0.15;
+            const valorJuridico = valorProduto * 0.05;
+
+            const result = `
+🔹 **Nome do cliente:** ${nomeCliente}
+🔹 **Passaporte do cliente:** ${passaporteCliente}
+🔹 **Nome do importador:** ${nomeImportador}
+🔹 **Passaporte do importador:** ${passaporteImportador}
+🔹 **Produto importado:** ${produtoImportado}
+🔹 **Valor total do produto:** R$ ${valorProduto.toFixed(2)}
+🔹 **Valor total do produto em reais:** R$ ${valorProdutoEmReais.toFixed(2)}
+
+**# Distribuição dos valores:**
+🔹 **Valor da porcentagem do importador (80%):** R$ ${valorImportador.toFixed(2)}
+🔹 **Valor da porcentagem da prefeitura (15%):** R$ ${valorPrefeitura.toFixed(2)}
+🔹 **Valor da porcentagem do jurídico (5%):** R$ ${valorJuridico.toFixed(2)}
+🔹 **Representante Judicial:** ${nomeAdvogado}
+🔹 **OAF:** ${oaf}
+            `;
+
+            const outputElement = document.getElementById('output');
+            outputElement.textContent = result; // Set text content for preservation of formatting
+
+            // Copy to clipboard
+            const textarea = document.createElement('textarea');
+            textarea.value = result;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            // Show success alert
+            document.getElementById('copiado').style.display = 'block';
+            setTimeout(() => document.getElementById('copiado').style.display = 'none', 2000);
+        });
+    </script>
+</body>
+</html>
